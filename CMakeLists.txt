@@ -4,8 +4,10 @@ project(CppAdsPrometeusConnector)
 set(CMAKE_CXX_STANDARD 23)
 #add_subdirectory(external/ADS/include/AdsLib)
 include_directories(external/ADS/include/AdsLib)
+include_directories(external/libpistacheStatic/include)
 
 add_executable(CppAdsPrometeusConnector
         src/main.cpp)
 
 target_link_libraries(CppAdsPrometeusConnector PRIVATE ${CMAKE_SOURCE_DIR}/external/ADS/lib/libAdsLib.a)
+target_link_libraries(CppAdsPrometeusConnector PRIVATE ${CMAKE_SOURCE_DIR}/external/libpistacheStatic/libpistache.a)
