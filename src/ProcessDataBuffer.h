@@ -19,13 +19,13 @@ public:
      * @param value the value that is inserted in the symbol name
      * @param symbolName the symbol name
      */
-    void setSymbolValue(std::string_view value, std::string_view symbolName);
+    void setSymbolValue(const std::string &value, const std::string &symbolName);
 
     /*!
      * @param symbolName the name of the symbol to get
      * @param value [OUT] the value that is at the symbol name
      */
-    void getSymbolValue(std::string_view symbolName, std::string& value);
+    void getSymbolValue(const std::string &symbolName, std::string& value);
 private:
     std::mutex dataAccess;
     std::unordered_map<std::string, std::string> symbolsValues;
