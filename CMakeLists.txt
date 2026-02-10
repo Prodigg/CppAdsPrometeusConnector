@@ -10,7 +10,9 @@ add_executable(CppAdsPrometeusConnector
         src/main.cpp
         src/ProcessDataBuffer.h
         src/ProcessDataBuffer.cpp
-        src/ADSProvidor.h)
+        src/ADSProvidor.h
+        src/ADSProvidor.cpp
+)
 
 target_link_libraries(CppAdsPrometeusConnector PRIVATE ${CMAKE_SOURCE_DIR}/external/ADS/lib/libAdsLib.a)
 target_link_libraries(CppAdsPrometeusConnector PRIVATE ${CMAKE_SOURCE_DIR}/external/libpistacheStatic/libpistache.a)
