@@ -1,0 +1,97 @@
+//
+// Created by prodigg on 22.02.26.
+//
+
+#ifndef CPPADSPROMETEUSCONNECTOR_PROMETHEUSENDPOINT_H
+#define CPPADSPROMETEUSCONNECTOR_PROMETHEUSENDPOINT_H
+
+#include <thread>
+#include <vector>
+
+#include "ProcessDataBuffer.h"
+#include <pistache/endpoint.h>
+#include <pistache/router.h>
+
+/*
+ * Prometheus formate:
+ *
+ * #HELP <metric_name> <description>
+ * #TYPE <metric_name> <[counter], [gauge], [untyped]>
+ * <metric_name> <data>
+ */
+
+enum class prometheusMetricType {
+    UNTYPED = 0,
+    COUNTER,
+    GAUGE
+};
+
+struct prometheusMetric_t {
+    prometheusMetricType metricType; // Type of metric
+    const std::string symbolName; // symbol name in the process buffer
+    std::string_view description; // optional description if empty omit description
+    std::string_view alias; // choose other name for symbol name in the endpoint if empty, use symbol name
+};
+
+class PrometheusEndpoint_t {
+public:
+    explicit PrometheusEndpoint_t(ProcessDataBuffer_t& dataBuffer, uint16_t port);
+
+    /*!
+     * @brief adds a symbol to the endpoint
+     * @param metric data for the metric to add
+     * @return successful
+     */
+    bool addSymbol(prometheusMetric_t metric);
+
+private:
+    /*!
+     * @brief this is the callback to retrieve data
+     */
+    void getData(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
+
+    /*!
+     * @brief get the prometheus metric name
+     * @param metric
+     * @return
+     */
+    static std::string_view getPrometheusMetricName(const prometheusMetric_t& metric);
+
+    /*!
+     * @brief generate the help text for the prometheus endpoint
+     * @param metric
+     * @return
+     */
+    static std::string generateHelp(const prometheusMetric_t& metric);
+
+    /*!
+     * @brief generate the type text for the prometheus endpoint
+     * @param metric
+     * @return
+     */
+    static std::string generateType(const prometheusMetric_t& metric);
+
+    /*!
+     * @brief generate the dataline for the prometheus endpoint
+     * @param metric
+     * @return
+     */
+    std::string generateDataLine(const prometheusMetric_t& metric) const;
+
+    /*!
+     * @brief generates the full endpoint data to serve
+     * @return
+     */
+    std::string generateEndpointData() const;
+
+    std::vector<prometheusMetric_t> _metrics;
+    std::optional<std::jthread> _thread;
+    ProcessDataBuffer_t& _dataBuffer;
+
+    Pistache::Http::Endpoint::Options opts = Pistache::Http::Endpoint::options().threads(1);
+    Pistache::Address addr;
+    Pistache::Http::Endpoint endpoint;
+    Pistache::Rest::Router router;
+};
+
+#endif //CPPADSPROMETEUSCONNECTOR_PROMETHEUSENDPOINT_H

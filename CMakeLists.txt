@@ -12,6 +12,8 @@ add_executable(CppAdsPrometeusConnector
         src/ProcessDataBuffer.cpp
         src/ADSProvidor.h
         src/ADSProvidor.cpp
+        src/PrometheusEndpoint.h
+        src/PrometheusEndpoint.cpp
 )
 
 target_link_libraries(CppAdsPrometeusConnector PRIVATE ${CMAKE_SOURCE_DIR}/external/ADS/lib/libAdsLib.a)

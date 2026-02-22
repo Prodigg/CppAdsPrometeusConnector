@@ -89,7 +89,7 @@ private:
      */
     void updateSymbolProcessDataBuffer(symbolDefinition_t& symbolDefinition, std::string value) const;
     void updateSymbolProcessDataBuffer(symbolDefinition_t &symbolDefinition, const char value) const { updateSymbolProcessDataBuffer (symbolDefinition, std::string{value});}
-    void updateSymbolProcessDataBuffer(symbolDefinition_t& symbolDefinition, const bool value) const { updateSymbolProcessDataBuffer (symbolDefinition, (value ? std::string("true") : std::string("false"))); }
+    void updateSymbolProcessDataBuffer(symbolDefinition_t& symbolDefinition, const bool value) const { updateSymbolProcessDataBuffer (symbolDefinition, (value ? std::string("1") : std::string("0"))); }
     template <typename T>
     void updateSymbolProcessDataBuffer(symbolDefinition_t& symbolDefinition, const T value) requires std::is_integral_v<T> || std::is_floating_point_v<T> { updateSymbolProcessDataBuffer (symbolDefinition, std::to_string(value)); }
 
