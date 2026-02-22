@@ -3,17 +3,17 @@
 //
 
 // ReSharper disable once CppMissingIncludeGuard not needed due to using modules
-export module ProcessDataBuffer;
+#pragma once
 
-import <mutex>;
-import <string>;
-import <unordered_map>;
+#include <mutex>
+#include <string>
+#include <unordered_map>
 
 /*!
  * @brief this class is a storage container between ADS receiver and REST endpoint
  * @details it has a mutex to limit the access of the object, the mutex is blocking.
  */
-export class ProcessDataBuffer_t {
+class ProcessDataBuffer_t {
 public:
     /*!
      * @param value the value that is inserted in the symbol name

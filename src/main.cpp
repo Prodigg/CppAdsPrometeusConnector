@@ -7,14 +7,33 @@
 #include <pistache/endpoint.h>
 #include <pistache/router.h>
 
+#include "ADSProvidor.h"
+#include "ProcessDataBuffer.h"
+
 using namespace Pistache;
+
 
 void test(const Rest::Request& request, Http::ResponseWriter response) {
     response.send(Http::Code::Ok, "endpoint is ok\n");
 }
 
 int main() {
+    ProcessDataBuffer_t processDataBuffer;
+    AdsProvidor_t adsProvidor(processDataBuffer,
+        {5, 109, 7, 180, 1, 1},
+        "plc-raphael.localdomain",
+        {192,168,1,126,1,1});
 
+    adsProvidor.addSymbol("NodeRed.bIsLightOn", symbolDataType_t::e_bool, std::chrono::seconds(1));
+
+    std::string newData;
+    while (true) {
+        processDataBuffer.getSymbolValue("NodeRed.bIsLightOn", newData);
+        if (std::cin.get() == 'r') {
+            std::cout << "NodeRed.bIsLightOn: " << newData << std::endl;
+        }
+    }
+/*
     static const AmsNetId remoteNetId{5, 109, 7, 180, 1, 1};
     static constexpr char remoteIpV4[] = "plc-raphael";
     bhf::ads::SetLocalAddress({192,168,1,126,1,1});
@@ -37,6 +56,8 @@ int main() {
     endpoint.init(opts);
     endpoint.setHandler(router.handler());
     endpoint.serve();
+*/
+
 
     return 0;
 }

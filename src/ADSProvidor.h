@@ -2,22 +2,24 @@
 // Created by prodigg on 01.02.26.
 //
 // ReSharper disable once CppMissingIncludeGuard
-export module AdsProvidor;
 
-import ProcessDataBuffer;
-import <string>;
-import <vector>;
-import <chrono>;
-import <concepts>;
-import <type_traits>;
-import <thread>;
+#pragma once
+
+#include "ProcessDataBuffer.h"
+#include <string>
+#include <vector>
+#include <chrono>
+#include <concepts>
+#include <type_traits>
+#include <thread>
 
 #include "AdsLib.h"
 #include "AdsDevice.h"
 #include "AdsVariable.h"
 #include "AdsNotificationOOI.h"
+#include "ProcessDataBuffer.h"
 
-export enum class symbolDataType_t {
+enum class symbolDataType_t {
     e_uint8_t = 0,
     e_uint16_t,
     e_uint32_t,
@@ -50,7 +52,7 @@ struct symbolDefinition_t {
  * This may change if the performance is terrible, and significant effort on optimizations is required
 */
 
-export class AdsProvidor_t {
+class AdsProvidor_t {
 public:
     explicit AdsProvidor_t(ProcessDataBuffer_t& processDataBuffer, AmsNetId remoteAmsNetId, std::string remoteIPv4, AmsNetId localAmsNetId);
     ~AdsProvidor_t();
@@ -108,7 +110,7 @@ private:
     /*!
      * @brief this is the main thread function
      */
-    void threadLoop();
+    void threadLoop(std::stop_token stoken);
 
     //! initialize object after calling bhf::ads::SetLocalAddress in the constructor.
     //! expect this variable to ALWAYS have a device.
