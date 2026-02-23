@@ -32,7 +32,7 @@ std::string PrometheusEndpoint_t::generateDataLine(const prometheusMetric_t& met
     std::stringstream ss;
     std::string value;
     _dataBuffer.getSymbolValue(metric.symbolName, value);
-    ss << getPrometheusMetricName(metric) << value << "\n";
+    ss << getPrometheusMetricName(metric) << " " << value << "\n";
     return ss.str();
 }
 
@@ -44,4 +44,30 @@ std::string PrometheusEndpoint_t::generateEndpointData() const {
         ss << generateDataLine(metric);
     }
     return ss.str();
+}
+
+bool PrometheusEndpoint_t::addSymbol(const prometheusMetric_t& metric) {
+    if (metric.symbolName.empty())
+        return false;
+    _metrics.push_back(metric);
+    return true;
+}
+
+PrometheusEndpoint_t::PrometheusEndpoint_t(ProcessDataBuffer_t& dataBuffer, const uint16_t port) :
+    _dataBuffer(dataBuffer),
+    addr(Pistache::Ipv4::any(), Pistache::Port(port)),
+    endpoint(addr) {
+    Pistache::Rest::Routes::Get(router, "/metrics", Pistache::Rest::Routes::bind(&PrometheusEndpoint_t::getData, this));
+
+    endpoint.init(opts);
+    endpoint.setHandler(router.handler());
+    _thread.emplace(std::jthread(&PrometheusEndpoint_t::threadLoop, this));
+}
+
+void PrometheusEndpoint_t::getData(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response) {
+    response.send(Pistache::Http::Code::Ok, generateEndpointData());
+}
+
+void PrometheusEndpoint_t::threadLoop(std::stop_token stoken) {
+    endpoint.serve();
 }

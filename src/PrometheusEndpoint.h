@@ -42,9 +42,15 @@ public:
      * @param metric data for the metric to add
      * @return successful
      */
-    bool addSymbol(prometheusMetric_t metric);
+    bool addSymbol(const prometheusMetric_t& metric);
 
 private:
+
+    /*!
+     * @brief this is the main thread function
+     */
+    void threadLoop(std::stop_token stoken);
+
     /*!
      * @brief this is the callback to retrieve data
      */

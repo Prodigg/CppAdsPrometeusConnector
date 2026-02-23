@@ -9,6 +9,7 @@
 
 #include "ADSProvidor.h"
 #include "ProcessDataBuffer.h"
+#include "PrometheusEndpoint.h"
 
 using namespace Pistache;
 
@@ -26,13 +27,19 @@ int main() {
 
     adsProvidor.addSymbol("NodeRed.bIsLightOn", symbolDataType_t::e_bool, std::chrono::seconds(1));
 
-    std::string newData;
-    while (true) {
-        processDataBuffer.getSymbolValue("NodeRed.bIsLightOn", newData);
-        if (std::cin.get() == 'r') {
-            std::cout << "NodeRed.bIsLightOn: " << newData << std::endl;
-        }
-    }
+    PrometheusEndpoint_t endpoint(processDataBuffer, 9080);
+    endpoint.addSymbol({prometheusMetricType::UNTYPED, "NodeRed.bIsLightOn", "is the light on", ""});
+
+    while (true)
+        ;
+
+    //std::string newData;
+    // while (true) {
+    //     processDataBuffer.getSymbolValue("NodeRed.bIsLightOn", newData);
+    //     if (std::cin.get() == 'r') {
+    //         std::cout << "NodeRed.bIsLightOn: " << newData << std::endl;
+    //     }
+    // }
 /*
     static const AmsNetId remoteNetId{5, 109, 7, 180, 1, 1};
     static constexpr char remoteIpV4[] = "plc-raphael";
