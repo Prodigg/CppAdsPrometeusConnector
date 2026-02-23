@@ -11,7 +11,7 @@ std::string PrometheusEndpoint_t::generateHelp(const prometheusMetric_t& metric)
     if (metric.description.empty())
         return "";
     std::stringstream ss;
-    ss << "# HELP " << getPrometheusMetricName(metric) << " " << metric.description << "\n";
+    ss << "# HELP " << getPrometheusMetricName(metric) << " " << escapeHelpStr(metric.description) << "\n";
     return ss.str();
 }
 
@@ -32,7 +32,7 @@ std::string PrometheusEndpoint_t::generateDataLine(const prometheusMetric_t& met
     std::stringstream ss;
     std::string value;
     _dataBuffer.getSymbolValue(metric.symbolName, value);
-    ss << getPrometheusMetricName(metric) << " " << value << "\n";
+    ss << getPrometheusMetricName(metric) << " " << generateLabel(metric) << value << "\n";
     return ss.str();
 }
 
@@ -70,4 +70,49 @@ void PrometheusEndpoint_t::getData(const Pistache::Rest::Request& request, Pista
 
 void PrometheusEndpoint_t::threadLoop(std::stop_token stoken) {
     endpoint.serve();
+}
+
+std::string PrometheusEndpoint_t::generateLabel(const prometheusMetric_t& metric) {
+    if (metric.labels.empty())
+        return "";
+    std::string labelStr = "{";
+    for (const auto &[label, value]: metric.labels) {
+        labelStr += label;
+        labelStr += "=\"";
+        labelStr += escapeLabelStr(value);
+        labelStr += "\",";
+    }
+
+    if (labelStr.at(labelStr.length() - 1) == ',')
+        labelStr = labelStr.substr(0, labelStr.length() - 1);
+    labelStr += "} ";
+    return labelStr;
+}
+
+std::string PrometheusEndpoint_t::escapeHelpStr(const std::string_view str) {
+    if (str.empty())
+        return "";
+    std::string workStr(str);
+    for (int i = 0; i < workStr.length(); i++) {
+        if (workStr[i] == '\\') {
+            // escaping needed
+            workStr.insert(i, "\\", 1);
+            i += 2;
+        }
+    }
+    return workStr;
+}
+
+std::string PrometheusEndpoint_t::escapeLabelStr(const std::string_view str) {
+    if (str.empty())
+        return "";
+    std::string workStr(str);
+    for (int i = 0; i < workStr.length(); i++) {
+        if (workStr[i] == '"' || workStr[i] == '\\') {
+            // escaping needed
+            workStr.insert(i, "\\", 1);
+            i += 2;
+        }
+    }
+    return workStr;
 }

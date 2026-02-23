@@ -26,11 +26,17 @@ enum class prometheusMetricType {
     GAUGE
 };
 
+struct label_t {
+    std::string label;
+    std::string value;
+};
+
 struct prometheusMetric_t {
     prometheusMetricType metricType; // Type of metric
     const std::string symbolName; // symbol name in the process buffer
     std::string_view description; // optional description if empty omit description
     std::string_view alias; // choose other name for symbol name in the endpoint if empty, use symbol name
+    std::vector<label_t> labels; // array of optional labels
 };
 
 class PrometheusEndpoint_t {
@@ -83,6 +89,27 @@ private:
      * @return
      */
     std::string generateDataLine(const prometheusMetric_t& metric) const;
+
+    /*!
+     * @brief generates the label string for additional categorization.
+     * @param metric
+     * @return
+     */
+    static std::string generateLabel(const prometheusMetric_t& metric);
+
+    /*!
+     * @brief properly escape the help text
+     * @param str
+     * @return
+     */
+    static std::string escapeHelpStr(std::string_view str);
+
+    /*!
+     * @brief properly escape the label text
+     * @param str
+     * @return
+     */
+    static std::string escapeLabelStr(std::string_view str);
 
     /*!
      * @brief generates the full endpoint data to serve

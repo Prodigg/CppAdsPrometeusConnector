@@ -27,8 +27,8 @@ int main() {
 
     adsProvidor.addSymbol("NodeRed.bIsLightOn", symbolDataType_t::e_bool, std::chrono::seconds(1));
 
-    PrometheusEndpoint_t endpoint(processDataBuffer, 9080);
-    endpoint.addSymbol({prometheusMetricType::UNTYPED, "NodeRed.bIsLightOn", "is the light on", ""});
+    PrometheusEndpoint_t endpoint(processDataBuffer, 9081);
+    endpoint.addSymbol({prometheusMetricType::UNTYPED, "NodeRed.bIsLightOn", "is the light on\\", "", {{"yo", "h\\i\""}}});
 
     while (true)
         ;
