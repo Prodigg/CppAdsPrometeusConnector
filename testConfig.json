@@ -1,0 +1,29 @@
+{
+  "global": {
+    "localNetId": "192.168.1.126.1.1",
+    "remoteNetId": "5.109.7.180.1.1",
+    "remoteIp": "plc-raphael.localdomain",
+    "httpPort": 9080
+  },
+
+  "NodeRed.bIsLightOn": {
+    "alias": "isLightOn",
+    "type": "untyped",
+    "description": "is the light on",
+    "ADSDatatype": "BOOL",
+    "scrapingTime": 1,
+    "labels": {
+      "testLabel": {
+        "value": "This is the first label"
+      },
+      "secondLabel": {
+        "value": "This is the second label"
+      }
+    }
+  },
+
+  "NodeRed.bDoNotDisturbStatus": {
+    "ADSDatatype": "BOOL",
+    "scrapingTime": 1
+  }
+}

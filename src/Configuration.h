@@ -8,7 +8,8 @@
 #include <string>
 #include "ADSProvidor.h"
 #include "PrometheusEndpoint.h"
-
+#include "nlohmann/json.hpp"
+using json = nlohmann::json;
 /*
  * Config formate:
  * global {
@@ -40,12 +41,31 @@
 */
 
 struct ConfigNetId {
-    uint8_t _1;
-    uint8_t _2;
-    uint8_t _3;
-    uint8_t _4;
-    uint8_t _5;
-    uint8_t _6;
+    uint8_t _1 = 0;
+    uint8_t _2 = 0;
+    uint8_t _3 = 0;
+    uint8_t _4 = 0;
+    uint8_t _5 = 0;
+    uint8_t _6 = 0;
+
+    explicit ConfigNetId(std::string str) {
+        _1 = toNum(str);
+        _2 = toNum(str);
+        _3 = toNum(str);
+        _4 = toNum(str);
+        _5 = toNum(str);
+        _6 = toNum(str);
+    }
+private:
+    static uint8_t toNum (std::string& str) {
+        size_t const delimitor =  str.find_first_of('.', 0);
+        if (delimitor == std::string::npos) {
+            return std::stoi(str);
+        }
+        const uint8_t result = std::stoi(str.substr(0, delimitor));
+        str.erase(0, delimitor + 1);
+        return result;
+    }
 };
 
 /*!
@@ -63,8 +83,16 @@ public:
     void configurePrometheusEndpoint(PrometheusEndpoint_t& Endpoint) const;
 
 private:
-    ConfigNetId localNetId = {};
-    ConfigNetId remoteNetId = {};
+    void processConfig();
+    void parseSymbol(const std::string& symbol);
+
+    static prometheusMetricType toPrometheusMetricType(const std::string& data);
+    static symbolDataType_t toSymbolDataType (const std::string& data);
+
+    json configData;
+
+    ConfigNetId localNetId {"0.0.0.0.0"};
+    ConfigNetId remoteNetId {"0.0.0.0.0"};
     std::string remoteIp;
     uint16_t httpPort = 0;
 
