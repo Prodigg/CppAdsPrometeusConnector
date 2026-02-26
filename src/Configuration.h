@@ -60,7 +60,7 @@ public:
     [[nodiscard]] inline uint16_t getHttpPort() const {return httpPort;};
 
     void configureADSProvidor(AdsProvidor_t& AdsProvidor) const;
-    void configurePrometheusEndpoint(PrometheusEndpoint_t& Endpoint);
+    void configurePrometheusEndpoint(PrometheusEndpoint_t& Endpoint) const;
 
 private:
     ConfigNetId localNetId = {};

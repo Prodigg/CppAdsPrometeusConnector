@@ -18,5 +18,11 @@ add_executable(CppAdsPrometeusConnector
         src/Configuration.cpp
 )
 
+include(FetchContent)
+
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
+target_link_libraries(CppAdsPrometeusConnector PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(CppAdsPrometeusConnector PRIVATE ${CMAKE_SOURCE_DIR}/external/ADS/lib/libAdsLib.a)
 target_link_libraries(CppAdsPrometeusConnector PRIVATE ${CMAKE_SOURCE_DIR}/external/libpistacheStatic/libpistache.a)
