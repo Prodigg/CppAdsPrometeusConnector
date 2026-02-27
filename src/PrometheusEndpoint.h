@@ -50,6 +50,12 @@ public:
      */
     bool addSymbol(const prometheusMetric_t& metric);
 
+    /*!
+     * @brief this method starts the endpoint
+     */
+    void serve() {
+        endpoint.serve();
+    }
 private:
 
     /*!
@@ -67,7 +73,7 @@ private:
      * @param metric
      * @return
      */
-    static std::string_view getPrometheusMetricName(const prometheusMetric_t& metric);
+    static std::string getPrometheusMetricName(const prometheusMetric_t& metric);
 
     /*!
      * @brief generate the help text for the prometheus endpoint

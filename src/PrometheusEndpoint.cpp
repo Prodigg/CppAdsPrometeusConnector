@@ -3,8 +3,14 @@
 //
 #include "PrometheusEndpoint.h"
 
-std::string_view PrometheusEndpoint_t::getPrometheusMetricName(const prometheusMetric_t& metric) {
-    return (metric.alias.empty() ? metric.symbolName : metric.alias);
+std::string PrometheusEndpoint_t::getPrometheusMetricName(const prometheusMetric_t& metric) {
+    if (metric.alias.empty()) {
+        std::string metricName = metric.symbolName;
+        std::ranges::replace(metricName, '.', '_');
+        return metricName;
+    }
+
+    return std::string(metric.alias);
 }
 
 std::string PrometheusEndpoint_t::generateHelp(const prometheusMetric_t& metric) {
@@ -32,7 +38,7 @@ std::string PrometheusEndpoint_t::generateDataLine(const prometheusMetric_t& met
     std::stringstream ss;
     std::string value;
     _dataBuffer.getSymbolValue(metric.symbolName, value);
-    ss << getPrometheusMetricName(metric) << " " << generateLabel(metric) << value << "\n";
+    ss << getPrometheusMetricName(metric) << generateLabel(metric) << " " << value << "\n";
     return ss.str();
 }
 
@@ -61,7 +67,9 @@ PrometheusEndpoint_t::PrometheusEndpoint_t(ProcessDataBuffer_t& dataBuffer, cons
 
     endpoint.init(opts);
     endpoint.setHandler(router.handler());
-    _thread.emplace(std::jthread(&PrometheusEndpoint_t::threadLoop, this));
+    // deactivated because the main loop is not needed at the moment, it may be that in the future the thread is reactivated.
+    // but for less complexity use the serve method from the class
+    //_thread.emplace(std::jthread(&PrometheusEndpoint_t::threadLoop, this));
 }
 
 void PrometheusEndpoint_t::getData(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response) {
@@ -85,7 +93,7 @@ std::string PrometheusEndpoint_t::generateLabel(const prometheusMetric_t& metric
 
     if (labelStr.at(labelStr.length() - 1) == ',')
         labelStr = labelStr.substr(0, labelStr.length() - 1);
-    labelStr += "} ";
+    labelStr += "}";
     return labelStr;
 }
 

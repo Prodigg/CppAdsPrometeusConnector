@@ -45,8 +45,7 @@ int main(int argc, char* argv[]) {
     PrometheusEndpoint_t endpoint(processDataBuffer, config.getHttpPort());
     config.configurePrometheusEndpoint(endpoint);
 
-    while (true)
-        ;
+    endpoint.serve();
 
     return 0;
 }
