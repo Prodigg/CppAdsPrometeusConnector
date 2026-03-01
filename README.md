@@ -142,7 +142,6 @@ This is a personal project built for a my use case and is not extensively tested
 - **Data loss may occur** (e.g., if the application crashes or the ADS connection fails).
 - **No high availability** mechanisms are implemented.
 - **Not suitable** for **high-frequency** or **real-time** data acquisition.
-- If an ADS variable cannot be read, the application terminates.
 - **No security** mechanisms are implemented. HTTP and ADS communications are **not encrypted**.
 
 It may be used in industrial environments where occasional **data loss is acceptable** and monitoring is non-critical.
