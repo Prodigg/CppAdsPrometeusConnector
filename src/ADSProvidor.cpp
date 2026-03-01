@@ -3,6 +3,7 @@
 //
 #include "ADSProvidor.h"
 
+#include <iostream>
 #include <mutex>
 
 AdsProvidor_t::AdsProvidor_t(ProcessDataBuffer_t& processDataBuffer, AmsNetId remoteAmsNetId, std::string remoteIPv4, AmsNetId localAmsNetId) :
@@ -47,47 +48,51 @@ void AdsProvidor_t::forceReadSymbol() {
 }
 
 void AdsProvidor_t::readSymbol(symbolDefinition_t& symbolDefinition) {
-    if (symbolDefinition.symbolType == symbolDataType_t::e_bool) {
-        const AdsVariable<bool> readVarBool{ _device.value(), symbolDefinition.symbolName };
-        updateSymbolProcessDataBuffer(symbolDefinition, static_cast<bool>(readVarBool));
-    } else if (symbolDefinition.symbolType == symbolDataType_t::e_char) {
-        const AdsVariable<char> readVarChar{ _device.value(), symbolDefinition.symbolName };
-        updateSymbolProcessDataBuffer(symbolDefinition, static_cast<char>(readVarChar));
-    } else if (symbolDefinition.symbolType == symbolDataType_t::e_double) {
-        const AdsVariable<double> readVarDouble{ _device.value(), symbolDefinition.symbolName };
-        updateSymbolProcessDataBuffer(symbolDefinition, static_cast<double>(readVarDouble));
-    } else if (symbolDefinition.symbolType == symbolDataType_t::e_float) {
-        const AdsVariable<float> readVarFloat{ _device.value(), symbolDefinition.symbolName };
-        updateSymbolProcessDataBuffer(symbolDefinition, static_cast<float>(readVarFloat));
-    } else if (symbolDefinition.symbolType == symbolDataType_t::e_int8_t) {
-        const AdsVariable<int8_t> readVarInt8{ _device.value(), symbolDefinition.symbolName };
-        updateSymbolProcessDataBuffer(symbolDefinition, static_cast<int8_t>(readVarInt8));
-    } else if (symbolDefinition.symbolType == symbolDataType_t::e_int16_t) {
-        const AdsVariable<int16_t> readVarInt16{ _device.value(), symbolDefinition.symbolName };
-        updateSymbolProcessDataBuffer(symbolDefinition, static_cast<int16_t>(readVarInt16));
-    } else if (symbolDefinition.symbolType == symbolDataType_t::e_int32_t) {
-        const AdsVariable<int32_t> readVarInt32{ _device.value(), symbolDefinition.symbolName };
-        updateSymbolProcessDataBuffer(symbolDefinition, static_cast<int32_t>(readVarInt32));
-    } else if (symbolDefinition.symbolType == symbolDataType_t::e_int64_t) {
-        const AdsVariable<int64_t> readVarInt64{ _device.value(), symbolDefinition.symbolName };
-        updateSymbolProcessDataBuffer(symbolDefinition, static_cast<int64_t>(readVarInt64));
-    } else if (symbolDefinition.symbolType == symbolDataType_t::e_string) {
-        const AdsVariable<std::string> readVarString{ _device.value(), symbolDefinition.symbolName };
-        updateSymbolProcessDataBuffer(symbolDefinition, readVarString);
-    } else if (symbolDefinition.symbolType == symbolDataType_t::e_uint8_t) {
-        const AdsVariable<uint8_t> readVarUint8{ _device.value(), symbolDefinition.symbolName };
-        updateSymbolProcessDataBuffer(symbolDefinition, static_cast<uint8_t>(readVarUint8));
-    } else if (symbolDefinition.symbolType == symbolDataType_t::e_uint16_t) {
-        const AdsVariable<uint16_t> readVarUint16{ _device.value(), symbolDefinition.symbolName };
-        updateSymbolProcessDataBuffer(symbolDefinition, static_cast<uint16_t>(readVarUint16));
-    } else if (symbolDefinition.symbolType == symbolDataType_t::e_uint32_t) {
-        const AdsVariable<uint32_t> readVarUint32{ _device.value(), symbolDefinition.symbolName };
-        updateSymbolProcessDataBuffer(symbolDefinition, static_cast<uint32_t>(readVarUint32));
-    } else if (symbolDefinition.symbolType == symbolDataType_t::e_uint64_t) {
-        const AdsVariable<uint64_t> readVarUint64{ _device.value(), symbolDefinition.symbolName };
-        updateSymbolProcessDataBuffer(symbolDefinition, static_cast<uint64_t>(readVarUint64));
-    } else
-        throw std::runtime_error("unknown symbol type");
+    try {
+        if (symbolDefinition.symbolType == symbolDataType_t::e_bool) {
+            const AdsVariable<bool> readVarBool{ _device.value(), symbolDefinition.symbolName };
+            updateSymbolProcessDataBuffer(symbolDefinition, static_cast<bool>(readVarBool));
+        } else if (symbolDefinition.symbolType == symbolDataType_t::e_char) {
+            const AdsVariable<char> readVarChar{ _device.value(), symbolDefinition.symbolName };
+            updateSymbolProcessDataBuffer(symbolDefinition, static_cast<char>(readVarChar));
+        } else if (symbolDefinition.symbolType == symbolDataType_t::e_double) {
+            const AdsVariable<double> readVarDouble{ _device.value(), symbolDefinition.symbolName };
+            updateSymbolProcessDataBuffer(symbolDefinition, static_cast<double>(readVarDouble));
+        } else if (symbolDefinition.symbolType == symbolDataType_t::e_float) {
+            const AdsVariable<float> readVarFloat{ _device.value(), symbolDefinition.symbolName };
+            updateSymbolProcessDataBuffer(symbolDefinition, static_cast<float>(readVarFloat));
+        } else if (symbolDefinition.symbolType == symbolDataType_t::e_int8_t) {
+            const AdsVariable<int8_t> readVarInt8{ _device.value(), symbolDefinition.symbolName };
+            updateSymbolProcessDataBuffer(symbolDefinition, static_cast<int8_t>(readVarInt8));
+        } else if (symbolDefinition.symbolType == symbolDataType_t::e_int16_t) {
+            const AdsVariable<int16_t> readVarInt16{ _device.value(), symbolDefinition.symbolName };
+            updateSymbolProcessDataBuffer(symbolDefinition, static_cast<int16_t>(readVarInt16));
+        } else if (symbolDefinition.symbolType == symbolDataType_t::e_int32_t) {
+            const AdsVariable<int32_t> readVarInt32{ _device.value(), symbolDefinition.symbolName };
+            updateSymbolProcessDataBuffer(symbolDefinition, static_cast<int32_t>(readVarInt32));
+        } else if (symbolDefinition.symbolType == symbolDataType_t::e_int64_t) {
+            const AdsVariable<int64_t> readVarInt64{ _device.value(), symbolDefinition.symbolName };
+            updateSymbolProcessDataBuffer(symbolDefinition, static_cast<int64_t>(readVarInt64));
+        } else if (symbolDefinition.symbolType == symbolDataType_t::e_string) {
+            const AdsVariable<std::string> readVarString{ _device.value(), symbolDefinition.symbolName };
+            updateSymbolProcessDataBuffer(symbolDefinition, readVarString);
+        } else if (symbolDefinition.symbolType == symbolDataType_t::e_uint8_t) {
+            const AdsVariable<uint8_t> readVarUint8{ _device.value(), symbolDefinition.symbolName };
+            updateSymbolProcessDataBuffer(symbolDefinition, static_cast<uint8_t>(readVarUint8));
+        } else if (symbolDefinition.symbolType == symbolDataType_t::e_uint16_t) {
+            const AdsVariable<uint16_t> readVarUint16{ _device.value(), symbolDefinition.symbolName };
+            updateSymbolProcessDataBuffer(symbolDefinition, static_cast<uint16_t>(readVarUint16));
+        } else if (symbolDefinition.symbolType == symbolDataType_t::e_uint32_t) {
+            const AdsVariable<uint32_t> readVarUint32{ _device.value(), symbolDefinition.symbolName };
+            updateSymbolProcessDataBuffer(symbolDefinition, static_cast<uint32_t>(readVarUint32));
+        } else if (symbolDefinition.symbolType == symbolDataType_t::e_uint64_t) {
+            const AdsVariable<uint64_t> readVarUint64{ _device.value(), symbolDefinition.symbolName };
+            updateSymbolProcessDataBuffer(symbolDefinition, static_cast<uint64_t>(readVarUint64));
+        } else
+            throw std::runtime_error("unknown symbol type");
+    } catch (const AdsException& e) {
+        std::cerr << "Error while reading Ads Symbol " << symbolDefinition.symbolName << ": " << e.what() << std::endl;
+    }
 }
 
 void AdsProvidor_t::subscribeSymbols() {
