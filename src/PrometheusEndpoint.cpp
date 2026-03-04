@@ -81,6 +81,7 @@ void PrometheusEndpoint_t::threadLoop(std::stop_token stoken) {
             endpoint.serve();
         } catch (std::exception &e) {
             std::cerr << "Server crashed: " << e.what() << std::endl;
+            return;
         }
     }
 }

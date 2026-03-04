@@ -47,5 +47,8 @@ int main(int argc, char* argv[]) {
 
     //endpoint.serve();
 
+    while (true)
+        ;
+
     return 0;
 }
