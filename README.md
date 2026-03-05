@@ -15,7 +15,8 @@ With this connector, it is possible to monitor ADS variables without any complex
 ## Requirements
 - Linux
 - CMake (if building from source)
-- [pistache](https://github.com/pistacheio/pistache) 
+- [pistache](https://github.com/pistacheio/pistache) (if building from source)
+- meson (if building from source)
 
 ## Features
 
